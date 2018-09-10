@@ -25,13 +25,18 @@ spaceship_aws() {
   # Check if the AWS-cli is installed
   spaceship::exists aws || return
 
+  # Test if the legacy AWS_DEFAULT_PROFILE is in use
+  # If empty, checjk for the newer AWS_PROFILE
+  local aws_profile=$AWS_DEFAULT_PROFILE
+  [[ -z $aws_profile ]] && aws_profile=$AWS_PROFILE
+
   # Is the current profile not the default profile
-  [[ -z $AWS_DEFAULT_PROFILE ]] || [[ "$AWS_DEFAULT_PROFILE" == "default" ]] && return
+  [[ -z $aws_profile ]] || [[ "$aws_profile" == "default" ]] && return
 
   # Show prompt section
   spaceship::section \
     "$SPACESHIP_AWS_COLOR" \
     "$SPACESHIP_AWS_PREFIX" \
-    "${SPACESHIP_AWS_SYMBOL}$AWS_DEFAULT_PROFILE" \
+    "${SPACESHIP_AWS_SYMBOL}$aws_profile" \
     "$SPACESHIP_AWS_SUFFIX"
 }
